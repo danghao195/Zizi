@@ -3,6 +3,18 @@ di dỉ dì di cái gì cũng có
 
 
 DB2:
+DB Host Name: 10.254.12.8
+Database Name: v4avgmp
+Port Number: 50000
+User Name: dbread
+Password: dbread
+--
+10.254.12.8
+50000
+table: avgrp
+u: arp
+p: crm.com
+jdbc:db2://10/254/12/8:50000/zizitest	
 -----------------------------------------------------------------
 CREATE TABLE "ARP"."M_MK" (
 
