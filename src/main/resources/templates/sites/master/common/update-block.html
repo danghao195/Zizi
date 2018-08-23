@@ -1,0 +1,8 @@
+<div th:fragment="update-block">
+	<br/>
+    <input type="hidden" th:field="*{updateTime}"/>
+    <input class="SeiSubmit" type="submit" name="btn_submit" 
+    	th:onclick="|if(!confirmUpdateData()) return false;|"
+     th:value="#{common.block.update.btn}"/>&nbsp;
+    <input class="SeiClear" onclick="resetUpdate()" type="button" name="sei_clear" th:value="#{btnReset}"/>
+</div>

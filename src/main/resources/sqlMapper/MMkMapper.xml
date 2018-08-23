@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="vn.avg.zizi.mappers.MMkMapper">
+
+    <select id="countMk" parameterType="MkSearchDTO" resultType="int">
+        SELECT COUNT(MK_CD)
+        FROM (
+            SELECT
+                DISTINCT MK_CD
+            FROM M_MK MK
+            <!-- <include refid="searchClause"></include> -->
+        ) AS totalMk
+    </select>
+
+    <select id="getMkList" parameterType="MkSearchDTO" resultMap="resultMkDTO">
+        SELECT
+            DISTINCT M_MK.MK_CD,
+            M_MK.MK_NM,
+            M_MK.PULL_DOWN_DSP_SEQ
+        FROM M_MK
+        ORDER BY ${orderBy} ${orderType}, M_MK.PULL_DOWN_DSP_SEQ ${orderType}
+        <!-- OFFSET ${offset} ROWS FETCH FIRST ${limit} ROWS ONLY  -->
+    </select>
+<!-- 
+    <select id="getMkList" parameterType="MkSearchDTO" resultMap="resultMkDTO">
+        SELECT
+            DISTINCT M_MK.MK_CD,
+            M_MK.MK_NM,
+            M_MK.PULL_DOWN_DSP_SEQ,
+            M_MK.CREATE_TIME,
+            M_MK.UPDATE_TIME
+        <include refid="searchClause"></include>
+        ORDER BY ${orderBy} ${orderType}, M_MK.PULL_DOWN_DSP_SEQ ${orderType}
+        LIMIT ${limit} OFFSET ${offset}
+    </select> -->
+	<sql id="searchClause">
+		FROM M_MK
+        LEFT JOIN M_MK_ITM_DIV 
+            ON M_MK_ITM_DIV.MK_CD = M_MK.MK_CD
+            AND M_MK_ITM_DIV.DELETE_FLG = '0'
+        <where>
+            <if test="mkNm !=null and mkNm.length > 0">
+                M_MK.MK_NM LIKE CONCAT(#{mkNm},'%')
+            </if>
+            <if test="itmDivList !=null and itmDivList.size() > 0">
+                AND M_MK_ITM_DIV.ITM_DIV_CD IN
+                <foreach item="itmDiv" index="index" collection="itmDivList" open="(" separator="," close=")">
+                    #{itmDiv}
+                </foreach>
+            </if>
+            AND M_MK.DELETE_FLG ='0'
+        </where>
+	</sql>
+	<select id="validatePullDown" parameterType="MMkEntity" resultType="Integer">
+        SELECT 
+            COUNT(*)
+        FROM M_MK
+        <where>
+            PULLDOWN_DISP_SEQ = #{pulldownDispSeq}
+            AND M_MK.DELETE_FLG ='0'
+            <if test="mkCd !=null">
+                AND MK_CD != #{mkCd}
+            </if>
+            
+        </where>
+    </select>
+    <select id="getMkCdList" parameterType="MkSearchDTO" resultType="Integer">
+        SELECT 
+            DISTINCT M_MK.MK_CD
+        FROM M_MK
+        
+        
+    </select>
+
+    <select id="getMakerProductInfo" resultType="String">
+        SELECT
+            M_MK_ITM_DIV.ITM_DIV_CD
+        FROM M_MK INNER JOIN M_MK_ITM_DIV ON 
+            M_MK_ITM_DIV.MK_CD=M_MK.MK_CD
+            AND M_MK_ITM_DIV.DELETE_FLG='0'
+        WHERE M_MK.MK_CD=#{mk_cd}
+    </select>
+	
+    <select id="getMMkInfo" parameterType="map" resultMap="resultMMkInfo">
+        SELECT
+            MK.MK_CD,
+            MK.MK_NM,
+            MK.PULL_DOWN_DSP_SEQ,
+            MK.UPDATE_TIME
+        FROM M_MK MK
+        WHERE
+             MK.MK_CD = #{maker_code}
+    </select>
+
+    <select id="checkExistpulldownDispSeqForUpdate" parameterType="MMkEntity" resultType="int">
+        SELECT Count(*)
+        FROM M_MK
+        WHERE MK_CD != #{mkCd}
+        AND PULLDOWN_DISP_SEQ= #{pulldownDispSeq};
+    </select>
+
+    <select id="getMakerNameList" resultType="String">
+        SELECT 
+            DISTINCT MK_NM
+        FROM 
+            M_MK
+      
+    </select>
+    
+    <select id="getAllRecord" resultType="MMkEntity">
+        SELECT M_MK.MK_NM AS mkNm, M_MK.MK_CD AS mkCd, M_MK.PULL_DOWN_DSP_SEQ AS pullDownDspSeq
+        FROM 
+            M_MK
+    </select>
+    <!-- <select id="getPopupMkInforList" parameterType="MkSearchDTO" resultType="MkSearchPopupDTO">
+	    SELECT M_MK.MK_NM AS mkNm, M_MK.MK_CD AS mkCd
+		FROM M_MK
+		<include refid="getPopupMkInforListClause"></include>
+		GROUP BY M_MK.MK_CD
+        ORDER BY ${orderBy} ${orderType}, M_MK.PULLDOWN_DISP_SEQ ${orderType}
+        LIMIT ${limit} OFFSET ${offset}
+	</select> -->
+	
+	<sql id="getPopupMkInforListClause">
+		INNER JOIN M_MK_ITM_DIV ON M_MK_ITM_DIV.MK_CD = M_MK.MK_CD AND M_MK_ITM_DIV.DELETE_FLG = '0'
+		<where>
+            <if test="mkNm !=null and mkNm.length > 0">
+                M_MK.MK_NM LIKE CONCAT(#{mkNm},'%')
+            </if>
+            <if test="itmDivCd !=null and itmDivCd.length > 0">
+                AND M_MK_ITM_DIV.ITM_DIV_CD = #{itmDivCd}
+            </if>
+            AND M_MK.DELETE_FLG ='0'
+        </where>
+	</sql>
+	
+	<select id="countPopupMkInfor" parameterType="MkSearchDTO" resultType="int">
+	        SELECT COUNT(DISTINCT M_MK.MK_CD)
+	        FROM M_MK
+	        <include refid="getPopupMkInforListClause"></include>
+    </select>
+	<!-- <select id="getMkListForPopup" parameterType="MkSearchDTO" resultType="MkPopupDTO">
+	SELECT
+		M_MK.MK_NM AS mkNm ,
+		M_MK.MK_CD AS mkCd ,
+		M_MK_ITM_DIV.ITM_DIV_CD AS itmDivCd ,
+		ITM_DIV.UNIV_MST_CD_NM AS itmDivNm
+	FROM M_MK
+	<include refid="searchConditionForPopup"></include>
+	ORDER BY ${orderBy} ${orderType}, M_MK.MK_CD ${orderType}
+	LIMIT ${limit} OFFSET ${offset}
+	</select> -->
+	<!-- <select id="countMkListForPopup" parameterType="MkrSearchPopupDTO" resultType="int">
+		SELECT
+			COUNT(*)
+		FROM M_MK
+		<include refid="searchConditionForPopup"></include>
+	</select> -->
+	<sql id="searchConditionForPopup">
+		INNER JOIN M_MK_ITM_DIV ON M_MK.MK_CD = M_MK_ITM_DIV.MK_CD AND M_MK_ITM_DIV.DELETE_FLG='0'
+		LEFT JOIN M_UNIV_MST AS ITM_DIV ON ITM_DIV.UNIV_MST_CD = M_MK_ITM_DIV.ITM_DIV_CD AND ITM_DIV.UNIV_MST_DEFINE_CD = 'S380' AND ITM_DIV.DELETE_FLG='0'
+		WHERE M_MK.DELETE_FLG='0'
+		<if test="mkNm !=null and mkNm.length > 0">
+			AND M_MK.MK_NM LIKE CONCAT(#{mkNm},'%')
+		</if>
+		<if test="itmDivCdList != null and !itmDivCdList.isEmpty()">
+			AND M_MK_ITM_DIV.ITM_DIV_CD IN
+			<foreach item="code" index="index" collection="itmDivCdList"
+				open="(" separator="," close=")">
+				#{code}
+			</foreach>
+		</if>
+	</sql>
+    <resultMap id="resultMMkInfo" type="MMkInfoDTO">
+        <id property="mkCd" column="MK_CD" />
+        <result property="mkNm" column="MK_NM" />
+        <result property="pulldownDspSeq" column="PULL_DOWN_DSP_SEQ" />
+        <result property="updateTime" column="UPDATE_TIME" />
+        <collection property="lgList" ofType="LanguageDTO">
+            <id property="lgDivCd" column="LG_DIV_CD" />
+            <result property="lgText" column="MK_NM_BY_LG" />
+        </collection>
+        <collection property="itmDivList" ofType="SelectItemDTO">
+            <result property="code" column="UNIV_MST_CD" />
+            <result property="name" column="UNIV_MST_CD_NM" />
+        </collection>
+    </resultMap>
+
+    <resultMap type="MkDTO" id="resultMkDTO">
+        <result property="mkCd" column="MK_CD" />
+        <result property="mkNm" column="MK_NM" />
+        <result property="pulldownDspSeq" column="PULL_DOWN_DSP_SEQ" />
+        <result property="createTime" column="CREATE_TIME" />
+        <result property="updateTime" column="UPDATE_TIME" />
+    </resultMap>
+</mapper>

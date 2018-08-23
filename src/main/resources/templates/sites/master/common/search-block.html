@@ -1,0 +1,7 @@
+<div class="formButton" th:fragment="search-block">
+    <input class="SeiSubmit" id="btn_submit" name="btn_submit" th:onclick="|if(!updateFormInput(this)) return false;|" type="submit" th:value="#{common.block.search.btn}"/>
+    <input class="SeiClear" name="sei_clear" type="button" th:value="#{common.block.clear.btn}" onclick="clearInputTau(this)" />
+    <input id="page" type="hidden" th:field="*{page}" class="notClear"/>
+    <input id="sortBy" type="hidden" th:field="*{sortIndex}" class="notClear"/>
+    <input id="sortType" type="hidden" th:field="*{sortType}" class="notClear"/>
+</div>

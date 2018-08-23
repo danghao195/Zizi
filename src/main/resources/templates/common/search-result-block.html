@@ -1,0 +1,229 @@
+<div th:fragment="table">
+	<th:block th:if="${#lists.size(dtoList) != 0}">
+		<div id="result" class="wFullTbl mt10">
+			hao
+			<div class="pagging">
+				<div th:replace="common/table::table-header"></div>
+			</div>
+			<div class="row" th:if="${headerSize != null and headerSize > 732}">
+				<table class="SeiResult2Dmy" cellspacing="0" cellpadding="0"
+					border="0">
+					<tbody>
+						<tr>
+							<td valign="bottom">
+								<div id="div_headerh"></div>
+							</td>
+							<td valign="bottom">
+								<div
+									onscroll="document.all('div_data').scrollLeft=this.scrollLeft;"
+									id="div_header" class="headerList" style="width: 772px">
+									<table class="SeiResult2 tblSearchResult tblSearchResultHeader"
+										th:style="'width:' + ${(isAddNo == null and headerSize == null) or (isAddNo != null and !isAddNo and headerSize == null) 
+										? 1000 : (isAddNo == null? headerSize : (headerSize + 40))} + 'px !important;'"
+										cellspacing="1" cellpadding="2">
+										<tbody>
+											<tr>
+												<th:block th:if="${isAddNo == null or isAddNo}">
+													<td class="SeiTD work-break-all"
+														style="width: 45px !important"
+														th:text="#{common.table.No}"></td>
+												</th:block>
+												<th:block th:each="header, iter : ${headers}">
+													<th:block th:if="${header.visible}">
+														<th:block th:if="${header.sortIndex != null}">
+															<td th:class="${'work-break-all SeiTD'}"
+																th:onclick="'doSort(\''+ ${header.sortIndex} +'\', this)'">
+																<a th:text="#{${header.header}}"></a>
+															</td>
+														</th:block>
+														<th:block th:if="${header.sortIndex == null}">
+															<td th:class="${'work-break-all SeiTD'}"
+																th:text="#{${header.header}}"></td>
+														</th:block>
+													</th:block>
+													<th:block th:if="${!header.visible}">
+														<td class="SeiTD work-break-all hidden"
+															style="display: none;" th:text="#{${header.header}}"></td>
+													</th:block>
+												</th:block>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</td>
+						</tr>
+						<tr>
+							<td valign="top">
+								<div
+									onscroll="document.all('div_data').scrollTop=this.scrollTop;"
+									id="div_datah" class="h20px"></div>
+							</td>
+							<td valign="top">
+								<div
+									onscroll="document.all('div_datah').scrollTop=this.scrollTop;document.all('div_header').scrollLeft = this.scrollLeft;"
+									id="div_data" class="dataList h200px" style="width: 789px">
+									<table class="SeiResult2 tblSearchResult tblSearchResultBody"
+										th:style="'width:' + ${(isAddNo == null and headerSize == null) or (isAddNo != null and !isAddNo and headerSize == null) 
+										? 1000 : (isAddNo == null ? headerSize : (headerSize + 40))} + 'px !important;'"
+										cellspacing="1" cellpadding="2">
+										<tbody>
+											<tr th:each="item, iter : ${dtoList}" class="clickable-row">
+												<th:block th:if="${isAddNo == null or isAddNo}">
+													<td class="work-break-all" style="width: 40px !important">
+														<span th:text="${iter.index} + 1 + ${startRow}" />
+													</td>
+												</th:block>
+												<th:block th:each="header : ${headers}">
+													<th:block th:if="${header.visible}">
+														<td th:class="${'work-break-all ' + header.align}"
+															th:style="'width:' + ${header.size} + 'px !important;'"
+															th:attr="prop-nm=${header.fieldNm }"><th:block
+																th:if="${header.typeElement != 'N/A'}">
+																<th:block th:if="${header.typeElement == 'link'}">
+																	<th:block th:if="${header.linkElement != null}">
+																		<a
+																			th:href="${__${'item.handlerTable(header.typeElement, header.linkElement)'}__}"
+																			th:text="${__${'item.' + header.fieldNm}__}"
+																			class="value"></a>
+																	</th:block>
+																	<th:block th:if="!${header.linkElement != null}">
+																		<a
+																			th:href="${__${'item.handlerTable(header.typeElement)'}__}"
+																			th:text="${__${'item.' + header.fieldNm}__}"
+																			class="value"></a>
+																	</th:block>
+
+																</th:block>
+																<th:block th:if="${header.typeElement == 'date'}">
+																	<th:block
+																		th:if="${__${'item.' + header.fieldNm}__ != null}">
+																		<span
+																			th:text="${#temporals.format(__${'item.' + header.fieldNm}__, header.dateFormat)}" />
+																	</th:block>
+																</th:block>
+																<th:block th:if="${header.typeElement == 'moneyFormat'}">
+																	<span
+																		th:text="${__${'item.' + header.fieldNm}__ != null ? #numbers.formatInteger(__${'item.' + header.fieldNm}__,1,'COMMA') : 0}" />
+																</th:block>
+																<th:block
+																	th:if="${header.typeElement == 'messageResource'}">
+																	<span
+																		th:text="${#messages.msg(__${'item.handlerTable(header.typeElement, header.fieldNm)'}__)}" />
+																</th:block>
+																<th:block
+																	th:if="${header.typeElement != 'date' and header.typeElement != 'link'
+							                                            and header.typeElement != 'moneyFormat' and header.typeElement != 'messageResource'}">
+																	<span
+																		th:text="${__${'item.handlerTable(header.typeElement)'}__}" />
+																</th:block>
+															</th:block> <th:block th:if="${header.typeElement == 'N/A'}">
+																<span th:text="${__${'item.' + header.fieldNm}__}" />
+															</th:block></td>
+													</th:block>
+													<th:block th:if="${!header.visible}">
+														<td class="work-break-all" style="display: none;"
+															th:attr="prop-nm=${header.fieldNm }"><span
+															th:text="${__${'item.' + header.fieldNm}__}" /></td>
+													</th:block>
+												</th:block>
+											</tr>
+										</tbody>
+									</table>
+								</div>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+			<div class="row" th:if="!${headerSize != null and headerSize > 732}">
+				<table id="pms_dtl2_pms_SeiResult2"
+					class="SeiResult2 tblSearchResult tblSearchResultBody"
+					cellspacing="1" cellpadding="2">
+					<thead>
+						<tr>
+							<th:block th:if="${isAddNo == null}">
+								<th class="SeiTH work-break-all" th:text="#{common.table.No}"></th>
+							</th:block>
+							<th:block th:each="header, iter : ${headers}">
+								<th:block th:if="${header.visible}">
+									<th:block th:if="${header.sortIndex != null}">
+										<th th:class="${'work-break-all SeiTH'}"
+											th:onclick="'doSort(\''+ ${header.sortIndex} +'\', this)'">
+											<a th:text="#{${header.header}}"></a>
+										</th>
+									</th:block>
+									<th:block th:if="${header.sortIndex == null}">
+										<th th:class="${'work-break-all SeiTH ' + header.align}"
+											th:text="#{${header.header}}"></th>
+									</th:block>
+								</th:block>
+								<th:block th:if="${!header.visible}">
+									<th class="SeiTH work-break-all hidden" style="display: none;"
+										th:text="#{${header.header}}"></th>
+								</th:block>
+							</th:block>
+						</tr>
+					</thead>
+					<tbody class=".tblSearchResultBody">
+						<tr th:each="item, iter : ${dtoList}" class="clickable-row">
+							<th:block th:if="${isAddNo == null or isAddNo}">
+								<td class="work-break-all" style="width: 40px !important">
+									<span th:text="${iter.index} + 1 + ${startRow}" />
+								</td>
+							</th:block>
+							<th:block th:each="header : ${headers}">
+								<th:block th:if="${header.visible}">
+									<td th:class="${'work-break-all ' + header.align}"
+										th:style="'width:' + ${header.size} + 'px !important;'"
+										th:attr="prop-nm=${header.fieldNm }"><th:block
+											th:if="${header.typeElement != 'N/A'}">
+											<th:block th:if="${header.typeElement == 'link'}">
+												<th:block th:if="${header.linkElement != null}">
+													<a
+														th:href="${__${'item.handlerTable(header.typeElement, header.linkElement)'}__}"
+														th:text="${__${'item.' + header.fieldNm}__}" class="value"></a>
+												</th:block>
+												<th:block th:if="!${header.linkElement != null}">
+													<a
+														th:href="${__${'item.handlerTable(header.typeElement)'}__}"
+														th:text="${__${'item.' + header.fieldNm}__}" class="value"></a>
+												</th:block>
+											</th:block>
+											<th:block th:if="${header.typeElement == 'date'}">
+												<th:block th:if="${__${'item.' + header.fieldNm}__ != null}">
+													<span
+														th:text="${#temporals.format(__${'item.' + header.fieldNm}__, header.dateFormat)}" />
+												</th:block>
+											</th:block>
+											<th:block th:if="${header.typeElement == 'moneyFormat'}">
+												<span
+													th:text="${__${'item.' + header.fieldNm}__ != null ? #numbers.formatInteger(__${'item.' + header.fieldNm}__,1,'COMMA') : 0}" />
+											</th:block>
+											<th:block th:if="${header.typeElement == 'messageResource'}">
+												<span
+													th:text="${#messages.msg(__${'item.handlerTable(header.typeElement, header.fieldNm)'}__)}" />
+											</th:block>
+											<th:block
+												th:if="${header.typeElement != 'date' and header.typeElement != 'link'
+                                            and header.typeElement != 'moneyFormat' and header.typeElement != 'messageResource'}">
+												<span
+													th:text="${__${'item.handlerTable(header.typeElement)'}__}" />
+											</th:block>
+										</th:block> <th:block th:if="${header.typeElement == 'N/A'}">
+											<span th:text="${__${'item.' + header.fieldNm}__}" />
+										</th:block></td>
+								</th:block>
+								<th:block th:if="${!header.visible}">
+									<td th:class="${'work-break-all ' + header.align}"
+										style="display: none;" th:attr="prop-nm=${header.fieldNm }">
+										<span th:text="${__${'item.' + header.fieldNm}__}" />
+									</td>
+								</th:block>
+							</th:block>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</th:block>
+</div>

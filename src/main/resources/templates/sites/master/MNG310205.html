@@ -1,0 +1,16 @@
+<div th:fragment="tab-menu">
+    <th:block th:replace="common/master-tab-menu :: tab-menu"></th:block>
+</div>
+<div class="SeiMainBg" id="SeiMainBg" th:fragment="content">
+    <th:block th:replace="common/master-title :: title"></th:block>
+  	<!-- システームエラー -->
+    <th:block th:replace="common/form-error :: error"></th:block>
+    <th:block th:if="${uploadFileCSVForm != null and csv == null}">
+        <th:block th:replace="common/registration-csv-form :: uploadCSV" th:with="uploadCSV=${'/MNG310205'}"></th:block>
+    </th:block>
+    <!-- registerCSV=${/MNG310405/register}" -->
+    <th:block th:include="sites/master/common/csv-block :: csv-block" th:with="registerCSV=${'/MNG310205/register'}"></th:block>
+</div>
+<th:block th:fragment="css-script">
+    <script th:src="@{/js/table.js}" type="text/javascript"></script>
+</th:block>

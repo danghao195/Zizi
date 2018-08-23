@@ -1,0 +1,111 @@
+<div class="SeiMainBg" th:fragment="content">
+    <th:block th:replace="common/master-title :: title"></th:block>
+    <th:block th:if="${message == null}">
+	    <th:block th:if="${MMkForm != null}">
+	         <div class="SeiBtMenu">
+		        <table cellspacing="0" cellpadding="0" border="0">
+		            <tbody>
+		                <tr>
+		                    <td>
+		                    	<a class="check-change-data-submenu"
+		                    	th:href="@{/MNG310202} + '?mkCd=' + ${MMkForm.mkCd}">
+		                        <span><img border="0" th:src="@{/images/btn/icon_inquiry.png}"/>Detail</span></a>
+		                    </td>
+		                    <td class="on">
+		                    	<strong><span><img border="0" th:src="@{/images/btn/icon_renew.png}" />New</span></strong>
+		                    </td>
+		                </tr>
+		            </tbody>
+		        </table>
+		    </div>
+	        <form class="SeiForm" th:action="@{MNG310203}" th:object="${MMkForm}" id="mMkForm" method="post">
+	            <label th:if="${#fields.hasErrors('screenMessage')}" th:class="'error'" th:errors="*{screenMessage}"></label>
+	            <label class="hidden" id="totalError_err_msg"></label>
+	            <table class="SeiInput w400px " cellspacing="1" cellpadding="2" border="0">
+	                <tbody>
+	                    <tr>
+	                        <td class="titleTbl inTbl" colspan="2" th:text="#{MNG310202.form.mk}">ãƒ¡ãƒ¼ã‚«ãƒ¼</td>
+	                    </tr>
+	                    <tr>
+	                        <th class="SeiTH SeiTHDetails w100px" th:text="#{MNG310202.form.mkCd}">ãƒ¡ãƒ¼ã‚«ãƒ¼ã‚³ãƒ¼ãƒ‰</th>
+	                        <td class="SeiTD SeiTDDetails">
+	                            <label th:text="${MMkForm.mkCd}"></label>
+	                            <input type="hidden" th:field="*{mkCd}" name="mkCd" />
+	                        </td>
+	                    </tr>
+	                    <tr>
+	                        <th class="SeiTH SeiTHDetails" th:text="#{MNG310202.form.pulldownDspSeq}">è¡¨ç¤ºé †åº�</th>
+	                        <td class="SeiTD SeiTDDetails">
+	                            <input class="SeiNotNull requiredInput numericInput" maxlength="20" size="10" th:field="*{pulldownDspSeq}" th:id="pulldownDspSeq" th:name="pulldownDspSeq"/>
+	                            <label th:if="${#fields.hasErrors('pulldownDspSeq')}" th:class="'error'" th:errors="*{pulldownDspSeq}"></label>
+	                            <label class="hidden" id="pulldownDispSeq_err_msg"></label>
+	                         </td>
+	                    </tr>
+	                    <tr>
+	                        <th class="SeiTH SeiTHDetails" th:text="#{MNG310202.form.mkNm}">ãƒ¡ãƒ¼ã‚«ãƒ¼å��</th>
+	                        <td class="SeiTD SeiTDDetails">
+	                            <input class="SeiNotNull requiredInput" maxlength="50" th:field="*{mkNm}" th:id="mkNm" th:name="mkNM"/>
+	                            <label th:if="${#fields.hasErrors('mkNm')}" th:class="'error'" th:errors="*{mkNm}">Name Error</label>
+	                            <label class="hidden" id="mkNm_err_msg"></label>
+	                        </td>
+	                    </tr>
+	                    <tr>
+	                        <td class="titleTbl inTbl" colspan="2" th:text="#{MNG310202.form.mutilLang}">è¨€èªžåˆ¥ãƒ¡ãƒ¼ã‚«ãƒ¼å��</td>
+	                    </tr>
+	                    <tr>
+	                        <th class="SeiTH SeiTHDetails" th:text="#{MNG310202.form.nmJa}">æ—¥æœ¬èªž</th>
+	                        <td class="SeiTD SeiTDDetails">
+	                            <input class="SeiNotNull requiredInput" maxlength="50" th:field="*{nmJa}" th:id="nmJa" th:name="nmJa"/>
+	                            <label th:if="${#fields.hasErrors('nmJa')}" th:class="'error'" th:errors="*{nmJa}"></label>
+	                            <label class="hidden" id="nmJa_err_msg"></label>
+	                        </td>
+	                    </tr>
+	                    <tr>
+	                        <th class="SeiTH SeiTHDetails" th:text="#{MNG310202.form.nmEn}">è‹±èªž</th>
+	                        <td class="SeiTD SeiTDDetails">
+	                            <input class="SeiNotNull requiredInput" maxlength="50" th:field="*{nmEn}" id="nmEn" name="nmEn"/>
+	                                <label th:if="${#fields.hasErrors('nmEn')}" th:class="'error'" th:errors="*{nmEn}"></label>
+	                                <label class="hidden" id="nmEn_err_msg"></label>
+	                        </td>
+	                    </tr>
+	                    <tr>
+	                        <th class="SeiTH SeiTHDetails" th:text="#{MNG310202.form.nmRu}">ãƒ­ã‚·ã‚¢èªž</th>
+	                        <td class="SeiTD SeiTDDetails">
+	                            <input class="SeiNotNull requiredInput" maxlength="50" th:field="*{nmRu}" th:id="nmRu" th:name="nmRu"/>
+	                            <label th:if="${#fields.hasErrors('nmRu')}" th:class="'error'" th:errors="*{nmRu}"></label>
+	                            <label class="hidden" id="nmRu_err_msg"></label>
+	                        </td>
+	                    </tr>
+	                    <tr>
+	                        <th class="SeiTH SeiTHDetails" th:text="#{MNG310202.form.nmEs}">ã‚¹ãƒšã‚¤ãƒ³èªž</th>
+	                        <td class="SeiTD SeiTDDetails">
+	                            <input class="SeiNotNull requiredInput" maxlength="50" th:field="*{nmEs}" id="nmEs" name="nmEs"/>
+	                            <label th:if="${#fields.hasErrors('nmEs')}" th:class="'error'" th:errors="*{nmEs}"></label>
+	                            <label class="hidden" id="nmEs_err_msg"></label>
+	                        </td>
+	                    </tr>
+	                    <tr>
+	                        <td class="titleTbl inTbl" colspan="2" th:text="#{MNG310202.form.prodType}"></td>
+	                    </tr>
+	                    <tr>
+	                        <th class="SeiTH SeiTHDetails" th:text="#{MNG310202.form.prodType}"></th>
+	                        <td class="SeiTD SeiTDDetails listChbx">
+	                            <th:block th:each="itmDiv : ${mMkVO?.itmDivList}">
+	                                <input  type="checkbox" th:value="${itmDiv.code}" th:field="*{itmDivCdList}" name="itmDivCdList"/>
+	                                <label th:text="${itmDiv.name}"></label>
+	                            </th:block>
+	                            <label th:if="${#fields.hasErrors('itmDivCdList')}" th:class="'error'" th:errors="*{itmDivCdList}"></label>
+	                        </td>
+	                    </tr>
+	                </tbody>
+	            </table>
+	            <th:block th:replace="sites/master/common/update-block"></th:block>
+	        </form>
+	    </th:block>
+    </th:block>
+</div>
+<th:block th:fragment="css-script">
+  <script th:src="@{/js/common_validate.js}" type="text/javascript"></script>
+  <script th:src="@{/js/check_change.js}" type="text/javascript"></script>
+  
+</th:block>
